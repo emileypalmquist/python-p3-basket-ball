@@ -1,3 +1,6 @@
+import ipdb
+
+
 def game_dict():
     return {
         "home": {
@@ -90,11 +93,11 @@ def game_dict():
                 },
             ],
         },
-            
+
         "away": {
             "team_name": "Washington Wizards",
             "colors": ["Red", "White", "Navy Blue"],
-            "players": [   
+            "players": [
                 {
                     "name": "Bradley Beal",
                     "number": 3,
@@ -182,3 +185,70 @@ def game_dict():
             ]
         }
     }
+
+
+def find_player(player_name):
+    for key, value in game_dict().items():
+        for player in value["players"]:
+            if player["name"] == player_name:
+                return player
+
+    return None
+
+
+def num_points_per_game(player_name):
+    player = find_player(player_name)
+    if player:
+        return player["points_per_game"]
+
+
+def player_age(player_name):
+    player = find_player(player_name)
+    if player:
+        return player["age"]
+
+
+def find_team(team_name):
+    for key, value in game_dict().items():
+        if value["team_name"] == team_name:
+            return value
+
+
+def team_colors(team_name):
+    return find_team(team_name)["colors"]
+
+
+def team_names():
+    return [value["team_name"] for key, value in game_dict().items()]
+
+
+def player_numbers(team_name):
+    team = find_team(team_name)
+    return [player["number"] for player in team["players"]]
+
+
+def player_stats(player_name):
+    return find_player(player_name)
+
+
+def create_shoe_brand_dict():
+    brand_dict = {}
+
+    for key, value in game_dict().items():
+        for player in value["players"]:
+            shoe_brand = player["shoe_brand"]
+            rebounds = player["rebounds_per_game"]
+            if brand_dict.get(shoe_brand):
+                brand_dict[shoe_brand].append(rebounds)
+            else:
+                brand_dict[shoe_brand] = [rebounds]
+
+    return brand_dict
+
+
+def average_rebounds_by_shoe_brand():
+    brand_dict = create_shoe_brand_dict()
+    for brand, list_of_rebounds in brand_dict.items():
+        average_rebounds = "%.2f" % round(
+            sum(list_of_rebounds) / len(list_of_rebounds), 2)
+        print(f'{brand}:  {average_rebounds}')
